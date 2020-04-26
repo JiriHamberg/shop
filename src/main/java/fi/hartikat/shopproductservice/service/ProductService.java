@@ -23,6 +23,12 @@ public class ProductService {
         return productRepository.findAll(pageRequest);
     }
 
+    public Product get(UUID uuid) {
+        return productRepository
+                .findById(uuid)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
     public Product create(Product product) {
         return productRepository.save(product);
     }

@@ -32,6 +32,13 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+    @GetMapping("/{productId}")
+    @Operation
+    public ResponseEntity<Product> get(@PathVariable UUID productId) {
+        var product = productService.get(productId);
+        return new ResponseEntity<>(product, HttpStatus.OK);
+    }
+
     @PostMapping
     @Operation
     public ResponseEntity<Product> create(@Valid @RequestBody Product product) {
