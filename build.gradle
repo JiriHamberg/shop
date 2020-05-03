@@ -3,10 +3,13 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.1'
+	id "com.github.johnrengelman.processes" version "0.5.0"
+	id "org.springdoc.openapi-gradle-plugin" version "1.0.0"
+	id "org.openapi.generator" version "4.2.3"
 }
 
 group = 'fi.hartikat'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.3-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
@@ -17,6 +20,37 @@ configurations {
 
 repositories {
 	mavenCentral()
+}
+
+openApi {
+	apiDocsUrl.set("http://localhost:8080/api-docs")
+	outputDir.set(file("$buildDir/specs"))
+	outputFileName.set("oapi-spec.json")
+	waitTimeInSeconds.set(300)
+}
+
+openApiGenerate {
+	generatorName = "typescript-axios"
+	inputSpec = "${buildDir}/specs/oapi-spec.json"
+	outputDir = "${buildDir}/client"
+	configOptions = [
+			npmName: '@JiriHamberg/shop-product-service',
+			npmVersion: "${project.version}",
+			npmRepository: "https://npm.pkg.github.com/",
+			supportsES6: "true"
+	]
+}
+
+task createOapiGenOutDir() {
+	def clientDir = new File(project.buildDir, "client")
+	if (!clientDir.exists()) {
+		clientDir.mkdirs()
+	}
+}
+
+task publishClient(type: Exec, dependsOn: ['createOapiGenOutDir', 'generateOpenApiDocs', 'openApiGenerate']) {
+	workingDir "${buildDir}/client"
+	commandLine 'sh', '-c', 'npm install && npm run build && npm publish'
 }
 
 dependencies {

@@ -20,11 +20,9 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
 public class Product {
-
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -41,13 +39,15 @@ public class Product {
     @NotNull
     @Schema(type = "string", allowableValues = {"EUR"})
     private Currency currency;
+
     @Column
     @NotNull
     private BigDecimal cost;
+
     @Column
     @NotEmpty
     private String name;
+
     @Column
     private String description;
-
 }
