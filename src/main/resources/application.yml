@@ -8,3 +8,6 @@ springdoc:
     path: "/swagger-ui"
   api-docs:
     path: "/api-docs"
+
+oidc:
+  jwk-set-uri: http://localhost:9900/auth/realms/shop/protocol/openid-connect/certs

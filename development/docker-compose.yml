@@ -1,0 +1,13 @@
+version: "3.5"
+services:
+
+  keycloak:
+    image: jboss/keycloak:10.0.0
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_IMPORT: /tmp/shop-realm.json
+    volumes:
+      - ${PWD}/resources/shop-realm.json:/tmp/shop-realm.json
+    ports:
+      - 9900:8080
